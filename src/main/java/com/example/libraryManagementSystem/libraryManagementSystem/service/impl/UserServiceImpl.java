@@ -3,6 +3,7 @@ package com.example.libraryManagementSystem.libraryManagementSystem.service.impl
 import com.example.libraryManagementSystem.libraryManagementSystem.dao.Users;
 import com.example.libraryManagementSystem.libraryManagementSystem.repo.UsersRepository;
 import com.example.libraryManagementSystem.libraryManagementSystem.service.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UsersService {
 
+    @Autowired
     private final UsersRepository usersRepository;
 
     public UserServiceImpl(UsersRepository usersRepository) {

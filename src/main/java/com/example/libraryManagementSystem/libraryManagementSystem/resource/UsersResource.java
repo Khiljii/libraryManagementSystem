@@ -2,6 +2,7 @@ package com.example.libraryManagementSystem.libraryManagementSystem.resource;
 
 import com.example.libraryManagementSystem.libraryManagementSystem.dao.Users;
 import com.example.libraryManagementSystem.libraryManagementSystem.service.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UsersResource {
 
+    @Autowired
    private final UsersService usersService;
 
     public UsersResource(UsersService usersService) {
