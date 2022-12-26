@@ -34,6 +34,15 @@ public class Users {
     public Users() {
     }
 
+    public Users(Long id, String firstName, String lastName, String password, String email, Set<Authorities> authorities) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
     public Long getId() {
         return id;
     }
@@ -81,4 +90,5 @@ public class Users {
     public void setAuthorities(Set<Authorities> authorities) {
         this.authorities = authorities;
     }
+
 }
