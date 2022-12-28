@@ -1,19 +1,11 @@
 package com.example.libraryManagementSystem.libraryManagementSystem.dto;
 
-import com.example.libraryManagementSystem.libraryManagementSystem.dao.Authorities;
-
-import java.util.List;
-import java.util.Set;
-
-public class UsersGetDto {
+public class UsersDto {
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
-    private List<String> authorities;
-
-    public UsersGetDto(String name, List<String> roles) {
-    }
+    private Boolean isAdmin;
 
     public Long getId() {
         return id;
@@ -47,11 +39,11 @@ public class UsersGetDto {
         this.email = email;
     }
 
-    public List<String> getAuthorities() {
-        return authorities;
+    public Boolean getAdmin() {
+        return isAdmin;
     }
 
-    public void setAuthorities(List<String> authorities) {
-        this.authorities = authorities;
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 }

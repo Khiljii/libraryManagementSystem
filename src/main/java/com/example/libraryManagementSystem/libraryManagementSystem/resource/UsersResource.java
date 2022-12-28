@@ -2,12 +2,13 @@ package com.example.libraryManagementSystem.libraryManagementSystem.resource;
 
 import com.example.libraryManagementSystem.libraryManagementSystem.dao.Authorities;
 import com.example.libraryManagementSystem.libraryManagementSystem.dao.Users;
-import com.example.libraryManagementSystem.libraryManagementSystem.dto.Mapper;
-import com.example.libraryManagementSystem.libraryManagementSystem.dto.UsersGetDto;
-import com.example.libraryManagementSystem.libraryManagementSystem.dto.UsersPostDto;
+import com.example.libraryManagementSystem.libraryManagementSystem.dto.UsersDto;
+import com.example.libraryManagementSystem.libraryManagementSystem.mapper.UsersMapper;
 import com.example.libraryManagementSystem.libraryManagementSystem.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class UsersResource {
 
     private AuthorityResource authorityResource;
 
-    private Mapper mapper;
+    private UsersMapper mapper;
 
     public UsersResource(UsersService usersService) {
         this.usersService = usersService;
@@ -31,21 +32,27 @@ public class UsersResource {
 
     @GetMapping("/find-all")
     @ResponseBody
-    public List<UsersGetDto> getAllUsers() {
-        return usersService.findAll().stream().map(mapper::usersGetDto).collect(Collectors.toList());
+    public List<UsersDto> getAllUsers() {
+        return usersService.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
 
     @PostMapping("/create")
     @ResponseBody
-    public Users create(@RequestBody UsersPostDto usersPostDto){
+    public Users create(@RequestBody UsersDto usersDto){
 
-        Users users = mapper.toUser(usersPostDto);
-        Set<Authorities> authorities= usersPostDto.getAuthorities()
-                .stream()
-                .map(authority -> authorityResource.saveAuthority(authority))
-                .collect(Collectors.toSet());
-        users.setAuthorities(authorities);
+        Users users = mapper.toUser(usersDto);
+        Boolean aut = usersDto.getAdmin();
+        Authorities authorities= new Authorities();
+        if(aut){
+            authorities.setName("admin");
+        }
+        else {
+            authorities.setName("user");
+        }
+        Set<Authorities> auth= new HashSet<>();
+        auth.add(authorities);
+        users.setAuthorities(auth);
 
         return usersService.save(users);
     }
