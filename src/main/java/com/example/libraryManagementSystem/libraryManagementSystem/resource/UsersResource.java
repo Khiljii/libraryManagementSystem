@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class UsersResource {
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Users save(UsersLoginDto usersDto){
+    public Users save(UsersLoginDto usersDto) throws NoSuchAlgorithmException {
         return usersService.save(usersDto);
     }
     @GetMapping("/{id}")

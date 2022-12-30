@@ -9,7 +9,10 @@ import com.example.libraryManagementSystem.libraryManagementSystem.service.Autho
 import com.example.libraryManagementSystem.libraryManagementSystem.service.UsersService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Service
@@ -29,12 +32,20 @@ public class UserServiceImpl implements UsersService {
     }
 
     @Override
-    public Users save(UsersLoginDto usersDto) {
+    public Users save(UsersLoginDto usersDto) throws NoSuchAlgorithmException {
         String pass = usersDto.getPassword();
-        usersDto.setPassword(Base64.getEncoder().encodeToString(pass.getBytes(StandardCharsets.UTF_8)));
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] encode = md.digest(pass.getBytes());
+        BigInteger bigInteger = new BigInteger(1,encode);
 
-        /**Decode Pass
+        usersDto.setPassword(bigInteger.toString(16));
+
+        /**Encode By Base64
         /*
+        Base64.getEncoder().encodeToString(pass.getBytes(StandardCharsets.UTF_8))
+         */
+        /**Decode By Base64
+
         byte[] decode= Base64.getDecoder().decode(pass);
         String decodedPass = new String(decode);
          */
