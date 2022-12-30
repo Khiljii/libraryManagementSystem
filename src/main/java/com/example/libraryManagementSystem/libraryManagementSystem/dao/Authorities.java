@@ -22,4 +22,10 @@ public class Authorities implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Authorities withName(String name){
+        this.name = name;
+        return this;
+    }
+
 }

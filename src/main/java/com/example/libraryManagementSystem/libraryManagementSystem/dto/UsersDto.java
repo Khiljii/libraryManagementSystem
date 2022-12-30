@@ -1,11 +1,22 @@
 package com.example.libraryManagementSystem.libraryManagementSystem.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.lang.NonNull;
+
+import javax.validation.constraints.Email;
+
+@JsonIgnoreProperties
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UsersDto {
     private Long id;
     private String firstName;
     private String lastName;
+    @NonNull
+    @Email
     private String email;
-    private Boolean isAdmin;
+    @NonNull
+    private Boolean admin;
 
     public Long getId() {
         return id;
@@ -40,10 +51,10 @@ public class UsersDto {
     }
 
     public Boolean getAdmin() {
-        return isAdmin;
+        return admin;
     }
 
     public void setAdmin(Boolean admin) {
-        isAdmin = admin;
+        this.admin = admin;
     }
 }

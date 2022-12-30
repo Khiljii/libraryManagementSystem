@@ -91,4 +91,9 @@ public class Users {
         this.authorities = authorities;
     }
 
+    public Users withAuthorities(Set<Authorities> authorities) {
+        this.authorities = authorities;
+        return this;
+    }
+
 }

@@ -1,22 +1,26 @@
 package com.example.libraryManagementSystem.libraryManagementSystem.service.impl;
 
 import com.example.libraryManagementSystem.libraryManagementSystem.dao.Users;
+import com.example.libraryManagementSystem.libraryManagementSystem.dto.UsersLoginDto;
+import com.example.libraryManagementSystem.libraryManagementSystem.enums.SystemAuthorities;
+import com.example.libraryManagementSystem.libraryManagementSystem.mapper.UsersMapper;
 import com.example.libraryManagementSystem.libraryManagementSystem.repo.UsersRepository;
+import com.example.libraryManagementSystem.libraryManagementSystem.service.AuthorityService;
 import com.example.libraryManagementSystem.libraryManagementSystem.service.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UsersService {
 
-    @Autowired
     private final UsersRepository usersRepository;
+    private final AuthorityService authorityService;
 
-    public UserServiceImpl(UsersRepository usersRepository) {
+    public UserServiceImpl(UsersRepository usersRepository, AuthorityService authorityService) {
         this.usersRepository = usersRepository;
+        this.authorityService = authorityService;
     }
 
     @Override
@@ -25,15 +29,39 @@ public class UserServiceImpl implements UsersService {
     }
 
     @Override
-    public Users save(Users users) {
-        Users user1 = new Users();
-        user1.setId(users.getId());
-        user1.setFirstName(users.getFirstName());
-        user1.setLastName(users.getLastName());
-        user1.setEmail(users.getEmail());
-        user1.setAuthorities(users.getAuthorities());
-        return usersRepository.save(user1);
+    public Users save(UsersLoginDto usersDto) {
+        String pass = usersDto.getPassword();
+        usersDto.setPassword(Base64.getEncoder().encodeToString(pass.getBytes(StandardCharsets.UTF_8)));
+
+        /**Decode Pass
+        /*
+        byte[] decode= Base64.getDecoder().decode(pass);
+        String decodedPass = new String(decode);
+         */
+
+        Users users = UsersMapper.toUser(usersDto);
+        if(usersDto.getAdmin() != null && usersDto.getAdmin())
+            users.setAuthorities(new HashSet<>(Arrays.asList(
+                    authorityService.findById(SystemAuthorities.admin.name()).get(),
+                    authorityService.findById(SystemAuthorities.user.name()).get()
+                    )));
+        else
+            users.setAuthorities(new HashSet<>(Arrays.asList(
+                    authorityService.findById(SystemAuthorities.user.name()).get())));
+
+
+        /**Second approach
+         * /
+         users = usersDto.getAdmin() ?
+                users.withAuthorities(new HashSet<>(Arrays.asList(
+                        authorityService.findById(SystemAuthorities.admin.toString()).get()))) :
+                users.withAuthorities(new HashSet<>(Arrays.asList(
+                        authorityService.findById(SystemAuthorities.user.toString()).get())));
+        */
+
+        return usersRepository.save(users);
     }
+
 
     @Override
     public Users update(Users users) {
@@ -43,6 +71,8 @@ public class UserServiceImpl implements UsersService {
         user1.setLastName(users.getLastName());
         user1.setEmail(users.getEmail());
         user1.setAuthorities(users.getAuthorities());
+
+
         return usersRepository.save(user1);
     }
 
