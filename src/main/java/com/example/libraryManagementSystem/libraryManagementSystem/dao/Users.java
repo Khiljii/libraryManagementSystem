@@ -1,11 +1,13 @@
 package com.example.libraryManagementSystem.libraryManagementSystem.dao;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",uniqueConstraints=@UniqueConstraint(columnNames="email"))
 public class Users {
 
     @Id

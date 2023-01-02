@@ -7,6 +7,7 @@ import com.example.libraryManagementSystem.libraryManagementSystem.mapper.UsersM
 import com.example.libraryManagementSystem.libraryManagementSystem.repo.UsersRepository;
 import com.example.libraryManagementSystem.libraryManagementSystem.service.AuthorityService;
 import com.example.libraryManagementSystem.libraryManagementSystem.service.UsersService;
+import com.example.libraryManagementSystem.libraryManagementSystem.utils.Util;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -34,11 +35,7 @@ public class UserServiceImpl implements UsersService {
     @Override
     public Users save(UsersLoginDto usersDto) throws NoSuchAlgorithmException {
         String pass = usersDto.getPassword();
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] encode = md.digest(pass.getBytes());
-        BigInteger bigInteger = new BigInteger(1,encode);
-
-        usersDto.setPassword(bigInteger.toString(16));
+        usersDto.setPassword(Util.encode(pass));
 
         /**Encode By Base64
         /*
